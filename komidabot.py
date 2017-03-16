@@ -13,6 +13,12 @@ import requests
 import os
 import discord
 
+MESSAGE_FORMAT = '''**Lunch today:**
+:tea: {}
+:tomato: {}
+:poultry_leg: {}
+:meat_on_bone: {}
+:spaghetti: {}'''
 
 def get_menu_url():
     """
@@ -116,7 +122,7 @@ def post_to_discord(token, menu, url):
     Raises:
         `discord.HTTPException`: The Discord message could not be posted.
     """
-    message = '**Lunch today:**\n:tea: {}\n:tomato: {}\n:poultry_leg: {}\n:meat_on_bone: {}\n:spaghetti: {}'.format(*menu)
+    message = MESSAGE_FORMAT.format(*menu)
 
     client = discord.Client()
     @client.event
@@ -142,7 +148,7 @@ if __name__ == '__main__':
                 menu_list = get_menu_today(f_pdf)
                 post_to_discord(os.environ['KOMIDABOT_TOKEN'], menu_list, menu_url)
 
-    except (requests.HTTPError, dicord.ClientError, ValueError) as e:
+    except (requests.HTTPError, discord.ClientError, ValueError) as e:
         logging.error(e)
 
     logging.shutdown()
