@@ -1,8 +1,5 @@
 komidabot
 =========
 
-A simple bot to post the daily menu of komida Middelheim to Slack.
+[Wout Bittremieux's `komidabot`](https://github.com/bittremieux/komidabot), adapted for Discord. Reads a Discord bot token from environment variable `KOMIDABOT_TOKEN`, and prints a lunch message to all servers it's connected to.
 
-Using the komidabot you can easily check the menu before arriving in the restaurant to beat the queues and achieve massive productivity gains!
-
-![komidabot](komidabot.png)
