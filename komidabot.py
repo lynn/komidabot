@@ -10,7 +10,8 @@ import lxml.html
 import pdfquery
 import requests
 
-import private
+import os
+import discord
 
 
 def get_menu_url():
@@ -103,25 +104,29 @@ def get_menu_today(fp):
     return menu
 
 
-def post_to_slack(menu, url):
+def post_to_discord(token, menu, url):
     """
-    Post the prettily formatted menu to Slack.
+    Post the prettily formatted menu to Discord.
 
     Args:
+        token: A Discord bot token.
         menu: List of individual items on today's menu.
         url: Location of the original menu pdf.
 
     Raises:
-        `requests.HTTPError`: The Slack message could not be posted.
+        `discord.HTTPException`: The Discord message could not be posted.
     """
-    message = ':tea: {}\n:tomato: {}\n:poultry_leg: {}\n:meat_on_bone: {}\n:spaghetti: {}\n' \
-              'Mistakes, comments, suggestions, ...? Please contact @wout.'.format(*menu)
+    message = '**Lunch today:**\n:tea: {}\n:tomato: {}\n:poultry_leg: {}\n:meat_on_bone: {}\n:spaghetti: {}'.format(*menu)
 
-    r_slack = requests.post(private.webhook, json={'username': 'komidabot', 'icon_emoji': ':fork_and_knife:',
-                                                   'text': '*LUNCH!*',
-                                                   'attachments': [{'title': 'Menu komida Middelheim',
-                                                                    'title_link': url, 'text': message}]})
-    r_slack.raise_for_status()    # check whether the message was correctly posted
+    client = discord.Client()
+    @client.event
+    async def on_ready():
+        for server in client.servers:
+            print('Sending to {}.'.format(server))
+            await client.send_message(server, message)
+        print('Done.')
+        await client.logout()
+    client.run(token)
 
 
 if __name__ == '__main__':
@@ -135,9 +140,9 @@ if __name__ == '__main__':
             menu_url = get_menu_url()
             with download_pdf(menu_url) as f_pdf:
                 menu_list = get_menu_today(f_pdf)
-                post_to_slack(menu_list, menu_url)
+                post_to_discord(os.environ['KOMIDABOT_TOKEN'], menu_list, menu_url)
 
-    except (requests.HTTPError, ValueError) as e:
+    except (requests.HTTPError, dicord.ClientError, ValueError) as e:
         logging.error(e)
 
     logging.shutdown()
