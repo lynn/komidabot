@@ -148,7 +148,7 @@ if __name__ == '__main__':
                 menu_list = get_menu_today(f_pdf)
                 post_to_discord(os.environ['KOMIDABOT_TOKEN'], menu_list, menu_url)
 
-    except (requests.HTTPError, discord.ClientError, ValueError) as e:
+    except (requests.HTTPError, discord.ClientException, ValueError) as e:
         logging.error(e)
 
     logging.shutdown()
