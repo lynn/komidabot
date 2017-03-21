@@ -14,11 +14,11 @@ import os
 import discord
 
 MESSAGE_FORMAT = '''**Lunch today:**
-:tea: {}
-:tomato: {}
-:poultry_leg: {}
-:meat_on_bone: {}
-:spaghetti: {}'''
+\N{teacup without handle} {}
+\N{tomato} {}
+\N{poultry leg} {}
+\N{meat on bone} {}
+\N{spaghetti} {}'''
 
 def get_menu_url():
     """
